@@ -6,13 +6,8 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
 </p>
 
-SkillHub is the **public skill registry for Special Agent**: publish, version, and search text-based agent skills (a `SKILL.md` plus supporting files).
+SkillHub is the **skill registry for Special Agent**: publish, version, and search text-based agent skills (a `SKILL.md` plus supporting files).
 It’s designed for fast browsing + a CLI-friendly API, with moderation hooks and vector search.
-
-onlycrabs.ai is the **SOUL.md registry**: publish and share system lore the same way you publish skills.
-
-Live: `https://skillhub.ai`
-onlycrabs.ai: `https://onlycrabs.ai`
 
 ## What you can do with it
 
@@ -22,13 +17,6 @@ onlycrabs.ai: `https://onlycrabs.ai`
 - Publish new soul versions with changelogs + tags.
 - Search via embeddings (vector index) instead of brittle keywords.
 - Star + comment; admins/mods can curate and approve skills.
-
-## onlycrabs.ai (SOUL.md registry)
-
-- Entry point is host-based: `onlycrabs.ai`.
-- On the onlycrabs.ai host, the home page and nav default to souls.
-- On SkillHub, souls live under `/souls`.
-- Soul bundles only accept `SOUL.md` for now (no extra files).
 
 ## How it works (high level)
 
