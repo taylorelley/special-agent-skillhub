@@ -22,7 +22,7 @@
 ### Fixed
 - Web: show pending-scan skills to owners without 404 (thanks @orlyjamie, #136).
 - Users: backfill empty handles from name/email in ensure (thanks @adlai88, #158).
-- Web: update footer branding to OpenClaw (thanks @jontsai, #122).
+- Web: update footer branding to Special Agent (thanks @jontsai, #122).
 - Auth: restore soft-deleted users on reauth, block banned users (thanks @mkrokosz, #106).
 
 ## 0.5.0 - 2026-02-02
@@ -46,13 +46,13 @@
 
 ### Added
 - Web: show published skills on user profiles (thanks @njoylab, #20).
-- CLI: include ClawHub + Moltbot fallback skill roots for sync scans.
-- CLI: support OpenClaw configuration files (`OPENCLAW_CONFIG_PATH` / `OPENCLAW_STATE_DIR`).
+- CLI: include SkillHub + Special Agent fallback skill roots for sync scans.
+- CLI: support Special Agent configuration files (`SPECIAL_AGENT_CONFIG_PATH` / `SPECIAL_AGENT_STATE_DIR`).
 
 ### Changed
-- Brand: rebrand to ClawHub and publish CLI as `clawhub` (legacy `clawdhub` supported).
-- Domain: default site/registry now `https://clawhub.ai`; `.well-known/clawhub.json` preferred.
-- Theme: persist theme under `clawhub-theme` (legacy key still read).
+- Brand: rebrand to SkillHub and publish CLI as `skillhub` (legacy `skillhub` supported).
+- Domain: default site/registry now `https://skillhub.ai`; `.well-known/skillhub.json` preferred.
+- Theme: persist theme under `skillhub-theme` (legacy key still read).
 
 ### Fixed
 - Registry: drop missing skills during search hydration (thanks @aaronn, #28).
@@ -75,7 +75,7 @@
 
 ### Added
 - Web: dynamic OG image cards for skills (name, description, version).
-- CLI: auto-scan Clawdbot skill roots (per-agent workspaces, shared skills, extraDirs).
+- CLI: auto-scan Special Agent skill roots (per-agent workspaces, shared skills, extraDirs).
 - Web: import skills from public GitHub URLs (auto-detect `SKILL.md`, smart file selection, provenance).
 - Web/API: SoulHub (SOUL.md registry) with v1 endpoints and first-run auto-seed.
 
@@ -85,7 +85,7 @@
 - Registry: make SoulHub auto-seed idempotent and non-user-owned.
 - Registry: keep GitHub backup state + publish backups intact (thanks @joshp123, #1).
 - CLI/Registry: restore fork lineage on sync + clamp bulk list queries (thanks @joshp123, #1).
-- CLI: default workdir falls back to Clawdbot workspace (override with `--workdir` / `CLAWHUB_WORKDIR`).
+- CLI: default workdir falls back to Special Agent workspace (override with `--workdir` / `SKILLHUB_WORKDIR`).
 
 ## 0.0.6 - 2026-01-07
 
@@ -101,7 +101,7 @@
 ## 0.0.5 - 2026-01-06
 
 ### Added
-- Telemetry: track installs via `clawhub sync` (logged-in only), per root, with 120-day staleness.
+- Telemetry: track installs via `skillhub sync` (logged-in only), per root, with 120-day staleness.
 - Skills: show current + all-time installs; sort by installs.
 - Profile: private "Installed" tab with JSON export + delete telemetry controls.
 - Docs: add `docs/telemetry.md` (what we track + how to opt out).
@@ -109,7 +109,7 @@
 - Web: dashboard for managing your published skills (thanks @dbhurley!).
 
 ### Changed
-- CLI: telemetry opt-out via `CLAWHUB_DISABLE_TELEMETRY=1`.
+- CLI: telemetry opt-out via `SKILLHUB_DISABLE_TELEMETRY=1`.
 - Web: move theme picker into mobile menu.
 
 ### Fixed
@@ -138,7 +138,7 @@
 - Web: improved mobile responsiveness (nav menu, skill detail layout, install command overflow).
 - Web: upload now unwraps folder picks so `SKILL.md` can be at the bundle root.
 - Registry: cap embedding payload size to avoid model context errors.
-- CLI: ignore legacy `auth.clawdhub.com` registry and prefer site discovery.
+- CLI: ignore legacy `auth.skillhub.com` registry and prefer site discovery.
 
 ### Changed
 - Web: homepage search now expands into full search mode with live results + highlighted toggle.
@@ -157,8 +157,8 @@
 ### Fixed
 - CLI sync: wrap note output to avoid terminal overflow; cap list lengths.
 - CLI sync: label fallback scans as fallback locations.
-- CLI package: bundle schema internally (no external `clawhub-schema` publish).
-- Repo: mark `clawhub-schema` as private to prevent publishing.
+- CLI package: bundle schema internally (no external `skillhub-schema` publish).
+- Repo: mark `skillhub-schema` as private to prevent publishing.
 
 ## 0.0.2 - 2026-01-04
 

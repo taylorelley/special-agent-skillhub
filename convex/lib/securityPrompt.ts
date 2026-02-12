@@ -43,7 +43,7 @@ export type SkillEvalContext = {
   parsed: {
     frontmatter: Record<string, unknown>
     metadata?: unknown
-    clawdis?: unknown
+    specialAgent?: unknown
   }
   files: Array<{ path: string; size: number }>
   skillMdContent: string
@@ -71,7 +71,7 @@ export type LlmEvalResponse = {
 // System prompt (~3500 words)
 // ---------------------------------------------------------------------------
 
-export const SECURITY_EVALUATOR_SYSTEM_PROMPT = `You are a security evaluator for OpenClaw AI skills. Users install skills to extend what their AI agent can do. Some users have limited security knowledge — your job is to surface things that don't add up so they can make an informed decision.
+export const SECURITY_EVALUATOR_SYSTEM_PROMPT = `You are a security evaluator for Special Agent AI skills. Users install skills to extend what their AI agent can do. Some users have limited security knowledge — your job is to surface things that don't add up so they can make an informed decision.
 
 You are not a malware classifier. You are an incoherence detector.
 
@@ -253,15 +253,15 @@ const MAX_SKILL_MD_CHARS = 6000
 
 export function assembleEvalUserMessage(ctx: SkillEvalContext): string {
   const fm = ctx.parsed.frontmatter ?? {}
-  const rawClawdis = (ctx.parsed.clawdis ?? {}) as Record<string, unknown>
+  const rawSpecialAgent = (ctx.parsed.specialAgent ?? {}) as Record<string, unknown>
   const meta = (ctx.parsed.metadata ?? {}) as Record<string, unknown>
-  const openclawFallback =
-    meta.openclaw && typeof meta.openclaw === 'object' && !Array.isArray(meta.openclaw)
-      ? (meta.openclaw as Record<string, unknown>)
+  const specialAgentFallback =
+    meta.special-agent && typeof meta.special-agent === 'object' && !Array.isArray(meta.special-agent)
+      ? (meta.special-agent as Record<string, unknown>)
       : {}
-  const clawdis = Object.keys(rawClawdis).length > 0 ? rawClawdis : openclawFallback
-  const requires = (clawdis.requires ?? openclawFallback.requires ?? {}) as Record<string, unknown>
-  const install = (clawdis.install ?? []) as Array<Record<string, unknown>>
+  const specialAgent = Object.keys(rawSpecialAgent).length > 0 ? rawSpecialAgent : specialAgentFallback
+  const requires = (specialAgent.requires ?? specialAgentFallback.requires ?? {}) as Record<string, unknown>
+  const install = (specialAgent.install ?? []) as Array<Record<string, unknown>>
 
   const codeExtensions = new Set([
     '.js',
@@ -308,10 +308,10 @@ export function assembleEvalUserMessage(ctx: SkillEvalContext): string {
 - Published: ${new Date(ctx.createdAt).toISOString()}`)
 
   // Flags
-  const always = fm.always ?? clawdis.always
-  const userInvocable = fm['user-invocable'] ?? clawdis.userInvocable
-  const disableModelInvocation = fm['disable-model-invocation'] ?? clawdis.disableModelInvocation
-  const os = clawdis.os
+  const always = fm.always ?? specialAgent.always
+  const userInvocable = fm['user-invocable'] ?? specialAgent.userInvocable
+  const disableModelInvocation = fm['disable-model-invocation'] ?? specialAgent.disableModelInvocation
+  const os = specialAgent.os
   sections.push(`**Flags:**
 - always: ${formatWithDefault(always, 'false (default)')}
 - user-invocable: ${formatWithDefault(userInvocable, 'true (default)')}
@@ -325,7 +325,7 @@ export function assembleEvalUserMessage(ctx: SkillEvalContext): string {
   const bins = (requires.bins as string[] | undefined) ?? []
   const anyBins = (requires.anyBins as string[] | undefined) ?? []
   const env = (requires.env as string[] | undefined) ?? []
-  const primaryEnv = (clawdis.primaryEnv as string | undefined) ?? 'none'
+  const primaryEnv = (specialAgent.primaryEnv as string | undefined) ?? 'none'
   const config = (requires.config as string[] | undefined) ?? []
 
   sections.push(`### Requirements

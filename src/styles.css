@@ -2953,7 +2953,7 @@ html.theme-transition::view-transition-new(theme) {
   font-style: italic;
 }
 
-/* OpenClaw confidence label */
+/* Special Agent confidence label */
 .scan-result-confidence {
   font-size: 0.72rem;
   font-weight: 600;

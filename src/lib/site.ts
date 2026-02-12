@@ -1,11 +1,11 @@
 export type SiteMode = 'skills' | 'souls'
 
-const DEFAULT_CLAWHUB_SITE_URL = 'https://clawhub.ai'
+const DEFAULT_SKILLHUB_SITE_URL = 'https://skillhub.ai'
 const DEFAULT_ONLYCRABS_SITE_URL = 'https://onlycrabs.ai'
 const DEFAULT_ONLYCRABS_HOST = 'onlycrabs.ai'
 
-export function getClawHubSiteUrl() {
-  return import.meta.env.VITE_SITE_URL ?? DEFAULT_CLAWHUB_SITE_URL
+export function getSkillHubSiteUrl() {
+  return import.meta.env.VITE_SITE_URL ?? DEFAULT_SKILLHUB_SITE_URL
 }
 
 export function getOnlyCrabsSiteUrl() {
@@ -70,15 +70,15 @@ export function getSiteMode(): SiteMode {
 }
 
 export function getSiteName(mode: SiteMode = getSiteMode()) {
-  return mode === 'souls' ? 'SoulHub' : 'ClawHub'
+  return mode === 'souls' ? 'SoulHub' : 'SkillHub'
 }
 
 export function getSiteDescription(mode: SiteMode = getSiteMode()) {
   return mode === 'souls'
     ? 'SoulHub — the home for SOUL.md bundles and personal system lore.'
-    : 'ClawHub — a fast skill registry for agents, with vector search.'
+    : 'SkillHub — a fast skill registry for agents, with vector search.'
 }
 
 export function getSiteUrlForMode(mode: SiteMode = getSiteMode()) {
-  return mode === 'souls' ? getOnlyCrabsSiteUrl() : getClawHubSiteUrl()
+  return mode === 'souls' ? getOnlyCrabsSiteUrl() : getSkillHubSiteUrl()
 }

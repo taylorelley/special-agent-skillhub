@@ -25,7 +25,7 @@ export async function requireGitHubAccountAge(ctx: ActionCtx, userId: Id<'users'
 
   if (stale) {
     const response = await fetch(`${GITHUB_API}/users/${encodeURIComponent(handle)}`, {
-      headers: { 'User-Agent': 'clawhub' },
+      headers: { 'User-Agent': 'skillhub' },
     })
     if (!response.ok) throw new ConvexError('GitHub account lookup failed')
 

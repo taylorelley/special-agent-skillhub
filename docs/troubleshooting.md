@@ -6,16 +6,16 @@ read_when:
 
 # Troubleshooting
 
-## `clawhub login` opens browser but never completes
+## `skillhub login` opens browser but never completes
 
 - Ensure your browser can reach `http://127.0.0.1:<port>/callback` (local firewalls/VPNs can interfere).
 - Use headless mode:
   - create a token in the web UI (Settings → API tokens)
-  - `clawhub login --token clh_...`
+  - `skillhub login --token clh_...`
 
 ## `whoami` / `publish` returns `Unauthorized` (401)
 
-- Token missing or revoked: check your config file (`CLAWHUB_CONFIG_PATH` override?).
+- Token missing or revoked: check your config file (`SKILLHUB_CONFIG_PATH` override?).
 - Ensure requests include `Authorization: Bearer ...` (CLI does this automatically).
 
 ## `publish` fails with `OPENAI_API_KEY is not configured`
@@ -28,11 +28,11 @@ read_when:
 - `sync` looks for folders containing `SKILL.md` (or `skill.md`).
 - It scans:
   - workdir first
-  - then fallback roots (legacy `~/clawdis/skills`, `~/clawdbot/skills`, etc.)
+  - then fallback roots (legacy `~/special-agent/skills`, `~/special-agent/skills`, etc.)
 - Provide explicit roots:
 
 ```bash
-clawhub sync --root /path/to/skills
+skillhub sync --root /path/to/skills
 ```
 
 ## `update` refuses due to “local changes (no match)”
@@ -40,8 +40,8 @@ clawhub sync --root /path/to/skills
 - Your local files don’t match any published fingerprint.
 - Options:
   - keep local edits; skip updating
-  - overwrite: `clawhub update <slug> --force`
-  - publish as fork: copy to new folder/slug then `clawhub publish ... --fork-of upstream@version`
+  - overwrite: `skillhub update <slug> --force`
+  - publish as fork: copy to new folder/slug then `skillhub publish ... --fork-of upstream@version`
 
 ## `GET /api/*` works locally but not on Vercel
 

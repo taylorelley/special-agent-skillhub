@@ -10,7 +10,7 @@ import {
   WellKnownConfigSchema,
 } from './schemas'
 
-describe('clawhub-schema', () => {
+describe('skillhub-schema', () => {
   it('parses lockfile records', () => {
     const lock = parseArk(
       LockfileSchema,
@@ -68,10 +68,10 @@ describe('clawhub-schema', () => {
     expect(
       parseArk(
         WellKnownConfigSchema,
-        { registry: 'https://example.convex.site', authBase: 'https://clawhub.ai' },
+        { registry: 'https://example.convex.site', authBase: 'https://skillhub.ai' },
         'WellKnown',
       ),
-    ).toEqual({ registry: 'https://example.convex.site', authBase: 'https://clawhub.ai' })
+    ).toEqual({ registry: 'https://example.convex.site', authBase: 'https://skillhub.ai' })
 
     expect(
       parseArk(
@@ -84,14 +84,14 @@ describe('clawhub-schema', () => {
     const combined = parseArk(
       WellKnownConfigSchema,
       {
-        apiBase: 'https://clawhub.ai',
-        registry: 'https://clawhub.ai',
-        authBase: 'https://clawhub.ai',
+        apiBase: 'https://skillhub.ai',
+        registry: 'https://skillhub.ai',
+        authBase: 'https://skillhub.ai',
       },
       'WellKnown',
     ) as unknown as Record<string, unknown>
-    expect(combined.apiBase).toBe('https://clawhub.ai')
-    expect(combined.registry).toBe('https://clawhub.ai')
+    expect(combined.apiBase).toBe('https://skillhub.ai')
+    expect(combined.registry).toBe('https://skillhub.ai')
   })
 
   it('throws labeled errors', () => {

@@ -2,14 +2,14 @@ import {
   getFrontmatterMetadata,
   getFrontmatterValue,
   type ParsedSkillFrontmatter,
-  parseClawdisMetadata,
+  parseSpecialAgentMetadata,
   parseFrontmatter,
 } from './skills'
 
 export type ParsedSkillData = {
   frontmatter: ParsedSkillFrontmatter
   metadata?: unknown
-  clawdis?: unknown
+  specialAgent?: unknown
 }
 
 export type SkillSummaryBackfillPatch = {
@@ -25,8 +25,8 @@ export function buildSkillSummaryBackfillPatch(args: {
   const frontmatter = parseFrontmatter(args.readmeText)
   const summary = getFrontmatterValue(frontmatter, 'description') ?? undefined
   const metadata = getFrontmatterMetadata(frontmatter)
-  const clawdis = parseClawdisMetadata(frontmatter)
-  const parsed: ParsedSkillData = { frontmatter, metadata, clawdis }
+  const specialAgent = parseSpecialAgentMetadata(frontmatter)
+  const parsed: ParsedSkillData = { frontmatter, metadata, specialAgent }
 
   const patch: SkillSummaryBackfillPatch = {}
   if (summary && summary !== args.currentSummary) {

@@ -86,7 +86,7 @@ describe('requireGitHubAccountAge', () => {
 
     expect(fetchMock).toHaveBeenCalledWith(
       'https://api.github.com/users/steipete',
-      expect.objectContaining({ headers: { 'User-Agent': 'clawhub' } }),
+      expect.objectContaining({ headers: { 'User-Agent': 'skillhub' } }),
     )
     expect(runMutation).toHaveBeenCalledWith(internal.users.updateGithubMetaInternal, {
       userId: 'users:1',

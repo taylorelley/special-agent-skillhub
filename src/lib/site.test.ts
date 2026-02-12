@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   detectSiteMode,
   detectSiteModeFromUrl,
-  getClawHubSiteUrl,
+  getSkillHubSiteUrl,
   getOnlyCrabsHost,
   getOnlyCrabsSiteUrl,
   getSiteDescription,
@@ -42,9 +42,9 @@ afterEach(() => {
 
 describe('site helpers', () => {
   it('returns default and env configured site URLs', () => {
-    expect(getClawHubSiteUrl()).toBe('https://clawhub.ai')
+    expect(getSkillHubSiteUrl()).toBe('https://skillhub.ai')
     withMetaEnv({ VITE_SITE_URL: 'https://example.com' }, () => {
-      expect(getClawHubSiteUrl()).toBe('https://example.com')
+      expect(getSkillHubSiteUrl()).toBe('https://example.com')
     })
   })
 
@@ -79,11 +79,11 @@ describe('site helpers', () => {
       expect(getOnlyCrabsHost()).toBe('souls.example.com')
       expect(detectSiteMode('souls.example.com')).toBe('souls')
       expect(detectSiteMode('sub.souls.example.com')).toBe('souls')
-      expect(detectSiteMode('clawhub.ai')).toBe('skills')
+      expect(detectSiteMode('skillhub.ai')).toBe('skills')
 
       expect(detectSiteModeFromUrl('https://souls.example.com/x')).toBe('souls')
       expect(detectSiteModeFromUrl('souls.example.com')).toBe('souls')
-      expect(detectSiteModeFromUrl('https://clawhub.ai')).toBe('skills')
+      expect(detectSiteModeFromUrl('https://skillhub.ai')).toBe('skills')
     })
   })
 
@@ -118,13 +118,13 @@ describe('site helpers', () => {
   })
 
   it('derives site metadata from mode', () => {
-    expect(getSiteName('skills')).toBe('ClawHub')
+    expect(getSiteName('skills')).toBe('SkillHub')
     expect(getSiteName('souls')).toBe('SoulHub')
 
-    expect(getSiteDescription('skills')).toContain('ClawHub')
+    expect(getSiteDescription('skills')).toContain('SkillHub')
     expect(getSiteDescription('souls')).toContain('SoulHub')
 
-    expect(getSiteUrlForMode('skills')).toBe('https://clawhub.ai')
+    expect(getSiteUrlForMode('skills')).toBe('https://skillhub.ai')
     expect(getSiteUrlForMode('souls')).toBe('https://onlycrabs.ai')
   })
 })
