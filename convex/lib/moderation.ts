@@ -31,7 +31,7 @@ export function deriveModerationFlags({
     skill.summary ?? '',
     JSON.stringify(parsed?.frontmatter ?? {}),
     JSON.stringify(parsed?.metadata ?? {}),
-    JSON.stringify((parsed as { moltbot?: unknown } | undefined)?.moltbot ?? {}),
+    JSON.stringify((parsed as { special-agent?: unknown } | undefined)?.special-agent ?? {}),
     ...files.map((file) => file.path),
   ]
     .filter(Boolean)

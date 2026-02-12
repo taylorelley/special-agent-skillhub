@@ -9,11 +9,11 @@ export function Footer() {
         <div className="site-footer-row">
           <div className="site-footer-copy">
             {siteName} · An{' '}
-            <a href="https://openclaw.ai" target="_blank" rel="noreferrer">
-              OpenClaw
+            <a href="https://special-agent.ai" target="_blank" rel="noreferrer">
+              Special Agent
             </a>{' '}
             project ·{' '}
-            <a href="https://github.com/openclaw/clawhub" target="_blank" rel="noreferrer">
+            <a href="https://github.com/special-agent/skillhub" target="_blank" rel="noreferrer">
               Open source (MIT)
             </a>{' '}
             ·{' '}

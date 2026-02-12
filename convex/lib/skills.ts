@@ -1,17 +1,17 @@
 import {
-  type ClawdbotConfigSpec,
-  type ClawdisSkillMetadata,
-  ClawdisSkillMetadataSchema,
+  type SpecialAgentConfigSpec,
+  type SpecialAgentSkillMetadata,
+  SpecialAgentSkillMetadataSchema,
   isTextContentType,
   type NixPluginSpec,
   parseArk,
   type SkillInstallSpec,
   TEXT_FILE_EXTENSION_SET,
-} from 'clawhub-schema'
+} from 'skillhub-schema'
 import { parse as parseYaml } from 'yaml'
 
 export type ParsedSkillFrontmatter = Record<string, unknown>
-export type { ClawdisSkillMetadata, SkillInstallSpec }
+export type { SpecialAgentSkillMetadata, SkillInstallSpec }
 
 const FRONTMATTER_START = '---'
 const DEFAULT_EMBEDDING_MAX_CHARS = 12_000
@@ -61,45 +61,45 @@ export function getFrontmatterMetadata(frontmatter: ParsedSkillFrontmatter) {
   return undefined
 }
 
-export function parseClawdisMetadata(frontmatter: ParsedSkillFrontmatter) {
+export function parseSpecialAgentMetadata(frontmatter: ParsedSkillFrontmatter) {
   const metadata = getFrontmatterMetadata(frontmatter)
   const metadataRecord =
     metadata && typeof metadata === 'object' && !Array.isArray(metadata)
       ? (metadata as Record<string, unknown>)
       : undefined
-  const clawdbotMeta = metadataRecord?.clawdbot
-  const clawdisMeta = metadataRecord?.clawdis
-  const openclawMeta = metadataRecord?.openclaw
+  const specialAgentMeta = metadataRecord?.special-agent
+  const specialAgentMeta = metadataRecord?.specialAgent
+  const specialAgentMeta = metadataRecord?.special-agent
   const metadataSource =
-    clawdbotMeta && typeof clawdbotMeta === 'object' && !Array.isArray(clawdbotMeta)
-      ? (clawdbotMeta as Record<string, unknown>)
-      : clawdisMeta && typeof clawdisMeta === 'object' && !Array.isArray(clawdisMeta)
-        ? (clawdisMeta as Record<string, unknown>)
-        : openclawMeta && typeof openclawMeta === 'object' && !Array.isArray(openclawMeta)
-          ? (openclawMeta as Record<string, unknown>)
+    specialAgentMeta && typeof specialAgentMeta === 'object' && !Array.isArray(specialAgentMeta)
+      ? (specialAgentMeta as Record<string, unknown>)
+      : specialAgentMeta && typeof specialAgentMeta === 'object' && !Array.isArray(specialAgentMeta)
+        ? (specialAgentMeta as Record<string, unknown>)
+        : specialAgentMeta && typeof specialAgentMeta === 'object' && !Array.isArray(specialAgentMeta)
+          ? (specialAgentMeta as Record<string, unknown>)
           : undefined
-  const clawdisRaw = metadataSource ?? frontmatter.clawdis
-  if (!clawdisRaw || typeof clawdisRaw !== 'object' || Array.isArray(clawdisRaw)) return undefined
+  const specialAgentRaw = metadataSource ?? frontmatter.specialAgent
+  if (!specialAgentRaw || typeof specialAgentRaw !== 'object' || Array.isArray(specialAgentRaw)) return undefined
 
   try {
-    const clawdisObj = clawdisRaw as Record<string, unknown>
+    const specialAgentObj = specialAgentRaw as Record<string, unknown>
     const requiresRaw =
-      typeof clawdisObj.requires === 'object' && clawdisObj.requires !== null
-        ? (clawdisObj.requires as Record<string, unknown>)
+      typeof specialAgentObj.requires === 'object' && specialAgentObj.requires !== null
+        ? (specialAgentObj.requires as Record<string, unknown>)
         : undefined
-    const installRaw = Array.isArray(clawdisObj.install) ? (clawdisObj.install as unknown[]) : []
+    const installRaw = Array.isArray(specialAgentObj.install) ? (specialAgentObj.install as unknown[]) : []
     const install = installRaw
       .map((entry) => parseInstallSpec(entry))
       .filter((entry): entry is SkillInstallSpec => Boolean(entry))
-    const osRaw = normalizeStringList(clawdisObj.os)
+    const osRaw = normalizeStringList(specialAgentObj.os)
 
-    const metadata: ClawdisSkillMetadata = {}
-    if (typeof clawdisObj.always === 'boolean') metadata.always = clawdisObj.always
-    if (typeof clawdisObj.emoji === 'string') metadata.emoji = clawdisObj.emoji
-    if (typeof clawdisObj.homepage === 'string') metadata.homepage = clawdisObj.homepage
-    if (typeof clawdisObj.skillKey === 'string') metadata.skillKey = clawdisObj.skillKey
-    if (typeof clawdisObj.primaryEnv === 'string') metadata.primaryEnv = clawdisObj.primaryEnv
-    if (typeof clawdisObj.cliHelp === 'string') metadata.cliHelp = clawdisObj.cliHelp
+    const metadata: SpecialAgentSkillMetadata = {}
+    if (typeof specialAgentObj.always === 'boolean') metadata.always = specialAgentObj.always
+    if (typeof specialAgentObj.emoji === 'string') metadata.emoji = specialAgentObj.emoji
+    if (typeof specialAgentObj.homepage === 'string') metadata.homepage = specialAgentObj.homepage
+    if (typeof specialAgentObj.skillKey === 'string') metadata.skillKey = specialAgentObj.skillKey
+    if (typeof specialAgentObj.primaryEnv === 'string') metadata.primaryEnv = specialAgentObj.primaryEnv
+    if (typeof specialAgentObj.cliHelp === 'string') metadata.cliHelp = specialAgentObj.cliHelp
     if (osRaw.length > 0) metadata.os = osRaw
 
     if (requiresRaw) {
@@ -117,12 +117,12 @@ export function parseClawdisMetadata(frontmatter: ParsedSkillFrontmatter) {
     }
 
     if (install.length > 0) metadata.install = install
-    const nix = parseNixPluginSpec(clawdisObj.nix)
+    const nix = parseNixPluginSpec(specialAgentObj.nix)
     if (nix) metadata.nix = nix
-    const config = parseClawdbotConfigSpec(clawdisObj.config)
+    const config = parseSpecialAgentConfigSpec(specialAgentObj.config)
     if (config) metadata.config = config
 
-    return parseArk(ClawdisSkillMetadataSchema, metadata, 'Clawdis metadata')
+    return parseArk(SpecialAgentSkillMetadataSchema, metadata, 'SpecialAgent metadata')
   } catch {
     return undefined
   }
@@ -255,13 +255,13 @@ function parseNixPluginSpec(input: unknown): NixPluginSpec | undefined {
   return spec
 }
 
-function parseClawdbotConfigSpec(input: unknown): ClawdbotConfigSpec | undefined {
+function parseSpecialAgentConfigSpec(input: unknown): SpecialAgentConfigSpec | undefined {
   if (!input || typeof input !== 'object') return undefined
   const raw = input as Record<string, unknown>
   const requiredEnv = normalizeStringList(raw.requiredEnv)
   const stateDirs = normalizeStringList(raw.stateDirs)
   const example = typeof raw.example === 'string' ? raw.example.trim() : ''
-  const spec: ClawdbotConfigSpec = {}
+  const spec: SpecialAgentConfigSpec = {}
   if (requiredEnv.length > 0) spec.requiredEnv = requiredEnv
   if (stateDirs.length > 0) spec.stateDirs = stateDirs
   if (example) spec.example = example

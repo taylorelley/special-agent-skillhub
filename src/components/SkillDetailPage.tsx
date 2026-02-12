@@ -1,5 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import type { ClawdisSkillMetadata, SkillInstallSpec } from 'clawhub-schema'
+import type { SpecialAgentSkillMetadata, SkillInstallSpec } from 'skillhub-schema'
 import { useAction, useMutation, useQuery } from 'convex/react'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -62,7 +62,7 @@ function VirusTotalIcon({ className }: { className?: string }) {
   )
 }
 
-function OpenClawIcon({ className }: { className?: string }) {
+function SpecialAgentIcon({ className }: { className?: string }) {
   return (
     <svg
       className={className}
@@ -70,9 +70,9 @@ function OpenClawIcon({ className }: { className?: string }) {
       height="1em"
       viewBox="0 0 24 24"
       fill="none"
-      aria-label="OpenClaw"
+      aria-label="Special Agent"
     >
-      <title>OpenClaw</title>
+      <title>Special Agent</title>
       <path
         d="M12 2C8.5 2 5.5 4 4 7c-2 4-1 8 2 11 1.5 1.5 3.5 2.5 6 2.5s4.5-1 6-2.5c3-3 4-7 2-11-1.5-3-4.5-5-8-5z"
         fill="currentColor"
@@ -241,7 +241,7 @@ function SecurityScanResults({
         ) : null}
         {llmStatusInfo ? (
           <div className="version-scan-badge">
-            <OpenClawIcon className="version-scan-icon version-scan-icon-oc" />
+            <SpecialAgentIcon className="version-scan-icon version-scan-icon-oc" />
             <span className={llmStatusInfo.className}>{llmStatusInfo.label}</span>
           </div>
         ) : null}
@@ -283,8 +283,8 @@ function SecurityScanResults({
         {llmStatusInfo && llmAnalysis ? (
           <div className="scan-result-row">
             <div className="scan-result-scanner">
-              <OpenClawIcon className="scan-result-icon scan-result-icon-oc" />
-              <span className="scan-result-scanner-name">OpenClaw</span>
+              <SpecialAgentIcon className="scan-result-icon scan-result-icon-oc" />
+              <span className="scan-result-scanner-name">Special Agent</span>
             </div>
             <div className={`scan-result-status ${llmStatusInfo.className}`}>
               {llmStatusInfo.label}
@@ -474,26 +474,26 @@ export function SkillDetailPage({
   const versionById = new Map<Id<'skillVersions'>, Doc<'skillVersions'>>(
     (diffVersions ?? versions ?? []).map((version) => [version._id, version]),
   )
-  const clawdis = (latestVersion?.parsed as { clawdis?: ClawdisSkillMetadata } | undefined)?.clawdis
-  const osLabels = useMemo(() => formatOsList(clawdis?.os), [clawdis?.os])
-  const requirements = clawdis?.requires
-  const installSpecs = clawdis?.install ?? []
-  const nixPlugin = clawdis?.nix?.plugin
-  const nixSystems = clawdis?.nix?.systems ?? []
+  const specialAgent = (latestVersion?.parsed as { specialAgent?: SpecialAgentSkillMetadata } | undefined)?.specialAgent
+  const osLabels = useMemo(() => formatOsList(specialAgent?.os), [specialAgent?.os])
+  const requirements = specialAgent?.requires
+  const installSpecs = specialAgent?.install ?? []
+  const nixPlugin = specialAgent?.nix?.plugin
+  const nixSystems = specialAgent?.nix?.systems ?? []
   const nixSnippet = nixPlugin ? formatNixInstallSnippet(nixPlugin) : null
-  const configRequirements = clawdis?.config
+  const configRequirements = specialAgent?.config
   const configExample = configRequirements?.example
     ? formatConfigSnippet(configRequirements.example)
     : null
-  const cliHelp = clawdis?.cliHelp
+  const cliHelp = specialAgent?.cliHelp
   const hasRuntimeRequirements = Boolean(
-    clawdis?.emoji ||
+    specialAgent?.emoji ||
       osLabels.length ||
       requirements?.bins?.length ||
       requirements?.anyBins?.length ||
       requirements?.env?.length ||
       requirements?.config?.length ||
-      clawdis?.primaryEnv,
+      specialAgent?.primaryEnv,
   )
   const hasInstallSpecs = installSpecs.length > 0
   const hasPluginBundle = Boolean(nixSnippet || configRequirements || cliHelp)
@@ -568,7 +568,7 @@ export function SkillDetailPage({
             <div className="pending-banner-content">
               <strong>Skill blocked — malicious content detected</strong>
               <p>
-                ClawHub Security flagged this skill as malicious. Downloads are disabled. Review the
+                SkillHub Security flagged this skill as malicious. Downloads are disabled. Review the
                 scan results below.
               </p>
             </div>
@@ -578,14 +578,14 @@ export function SkillDetailPage({
             <div className="pending-banner-content">
               <strong>Skill flagged — suspicious patterns detected</strong>
               <p>
-                ClawHub Security flagged this skill as suspicious. Review the scan results before
+                SkillHub Security flagged this skill as suspicious. Review the scan results before
                 using.
               </p>
               {canManage ? (
                 <p className="pending-banner-appeal">
                   If you believe this skill has been incorrectly flagged, please{' '}
                   <a
-                    href="https://github.com/openclaw/clawhub/issues"
+                    href="https://github.com/special-agent/skillhub/issues"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -849,7 +849,7 @@ export function SkillDetailPage({
                       Runtime requirements
                     </h3>
                     <div className="skill-panel-body">
-                      {clawdis?.emoji ? <div className="tag">{clawdis.emoji} Clawdis</div> : null}
+                      {specialAgent?.emoji ? <div className="tag">{specialAgent.emoji} SpecialAgent</div> : null}
                       {osLabels.length ? (
                         <div className="stat">
                           <strong>OS</strong>
@@ -880,10 +880,10 @@ export function SkillDetailPage({
                           <span>{requirements.config.join(', ')}</span>
                         </div>
                       ) : null}
-                      {clawdis?.primaryEnv ? (
+                      {specialAgent?.primaryEnv ? (
                         <div className="stat">
                           <strong>Primary env</strong>
-                          <span>{clawdis.primaryEnv}</span>
+                          <span>{specialAgent.primaryEnv}</span>
                         </div>
                       ) : null}
                     </div>
@@ -924,7 +924,7 @@ export function SkillDetailPage({
               Install via Nix
             </h2>
             <p className="section-subtitle" style={{ margin: 0 }}>
-              {nixSystems.length ? `Systems: ${nixSystems.join(', ')}` : 'nix-clawdbot'}
+              {nixSystems.length ? `Systems: ${nixSystems.join(', ')}` : 'nix-special-agent'}
             </p>
             <pre className="hero-install-code" style={{ marginTop: 12 }}>
               {nixSnippet}
@@ -1270,6 +1270,6 @@ function formatBytes(bytes: number) {
 }
 
 function formatNixInstallSnippet(plugin: string) {
-  const snippet = `programs.clawdbot.plugins = [ { source = "${plugin}"; } ];`
+  const snippet = `programs.special-agent.plugins = [ { source = "${plugin}"; } ];`
   return formatConfigSnippet(snippet)
 }

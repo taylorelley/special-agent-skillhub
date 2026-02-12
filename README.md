@@ -1,17 +1,17 @@
-# ClawHub
+# Special Agent SkillHub
 
 <p align="center">
-  <a href="https://github.com/openclaw/clawhub/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/openclaw/clawhub/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
+  <a href="https://github.com/special-agent/skillhub/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/special-agent/skillhub/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
   <a href="https://discord.gg/clawd"><img src="https://img.shields.io/discord/1456350064065904867?label=Discord&logo=discord&logoColor=white&color=5865F2&style=for-the-badge" alt="Discord"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
 </p>
 
-ClawHub is the **public skill registry for Clawdbot**: publish, version, and search text-based agent skills (a `SKILL.md` plus supporting files).
+SkillHub is the **public skill registry for Special Agent**: publish, version, and search text-based agent skills (a `SKILL.md` plus supporting files).
 It’s designed for fast browsing + a CLI-friendly API, with moderation hooks and vector search.
 
 onlycrabs.ai is the **SOUL.md registry**: publish and share system lore the same way you publish skills.
 
-Live: `https://clawhub.ai`
+Live: `https://skillhub.ai`
 onlycrabs.ai: `https://onlycrabs.ai`
 
 ## What you can do with it
@@ -27,7 +27,7 @@ onlycrabs.ai: `https://onlycrabs.ai`
 
 - Entry point is host-based: `onlycrabs.ai`.
 - On the onlycrabs.ai host, the home page and nav default to souls.
-- On ClawHub, souls live under `/souls`.
+- On SkillHub, souls live under `/souls`.
 - Soul bundles only accept `SOUL.md` for now (no extra files).
 
 ## How it works (high level)
@@ -35,16 +35,16 @@ onlycrabs.ai: `https://onlycrabs.ai`
 - Web app: TanStack Start (React, Vite/Nitro).
 - Backend: Convex (DB + file storage + HTTP actions) + Convex Auth (GitHub OAuth).
 - Search: OpenAI embeddings (`text-embedding-3-small`) + Convex vector search.
-- API schema + routes: `packages/schema` (`clawhub-schema`).
+- API schema + routes: `packages/schema` (`skillhub-schema`).
 
 
 ## Telemetry
 
-ClawHub tracks minimal **install telemetry** (to compute install counts) when you run `clawhub sync` while logged in.
+SkillHub tracks minimal **install telemetry** (to compute install counts) when you run `skillhub sync` while logged in.
 Disable via:
 
 ```bash
-export CLAWHUB_DISABLE_TELEMETRY=1
+export SKILLHUB_DISABLE_TELEMETRY=1
 ```
 
 Details: `docs/telemetry.md`.
@@ -96,7 +96,7 @@ This writes `JWT_PRIVATE_KEY` + `JWKS` to the deployment and prints values for y
 
 ## Nix plugins (nixmode skills)
 
-ClawHub can store a nix-clawdbot plugin pointer in SKILL frontmatter so the registry knows which
+SkillHub can store a nix-special-agent plugin pointer in SKILL frontmatter so the registry knows which
 Nix package bundle to install. A nix plugin is different from a regular skill pack: it bundles the
 skill pack, the CLI binary, and its config flags/requirements together.
 
@@ -106,15 +106,15 @@ Add this to `SKILL.md`:
 ---
 name: peekaboo
 description: Capture and automate macOS UI with the Peekaboo CLI.
-metadata: {"clawdbot":{"nix":{"plugin":"github:clawdbot/nix-steipete-tools?dir=tools/peekaboo","systems":["aarch64-darwin"]}}}
+metadata: {"special-agent":{"nix":{"plugin":"github:special-agent/nix-steipete-tools?dir=tools/peekaboo","systems":["aarch64-darwin"]}}}
 ---
 ```
 
-Install via nix-clawdbot:
+Install via nix-special-agent:
 
 ```nix
-programs.clawdbot.plugins = [
-  { source = "github:clawdbot/nix-steipete-tools?dir=tools/peekaboo"; }
+programs.special-agent.plugins = [
+  { source = "github:special-agent/nix-steipete-tools?dir=tools/peekaboo"; }
 ];
 ```
 
@@ -124,7 +124,7 @@ You can also declare config requirements + an example snippet:
 ---
 name: padel
 description: Check padel court availability and manage bookings via Playtomic.
-metadata: {"clawdbot":{"config":{"requiredEnv":["PADEL_AUTH_FILE"],"stateDirs":[".config/padel"],"example":"config = { env = { PADEL_AUTH_FILE = \\\"/run/agenix/padel-auth\\\"; }; };"}}}
+metadata: {"special-agent":{"config":{"requiredEnv":["PADEL_AUTH_FILE"],"stateDirs":[".config/padel"],"example":"config = { env = { PADEL_AUTH_FILE = \\\"/run/agenix/padel-auth\\\"; }; };"}}}
 ---
 ```
 
@@ -134,15 +134,15 @@ To show CLI help (recommended for nix plugins), include the `cli --help` output:
 ---
 name: padel
 description: Check padel court availability and manage bookings via Playtomic.
-metadata: {"clawdbot":{"cliHelp":"padel --help\\nUsage: padel [command]\\n"}}
+metadata: {"special-agent":{"cliHelp":"padel --help\\nUsage: padel [command]\\n"}}
 ---
 ```
 
-`metadata.clawdbot` is preferred, but `metadata.clawdis` and `metadata.openclaw` are accepted as aliases.
+`metadata.special-agent` is the preferred key for skill metadata declarations.
 
 ## Skill metadata
 
-Skills declare their runtime requirements (env vars, binaries, install specs) in the `SKILL.md` frontmatter. ClawHub's security analysis checks these declarations against actual skill behavior.
+Skills declare their runtime requirements (env vars, binaries, install specs) in the `SKILL.md` frontmatter. SkillHub's security analysis checks these declarations against actual skill behavior.
 
 Full reference: [`docs/skill-format.md`](docs/skill-format.md#frontmatter-metadata)
 
@@ -153,7 +153,7 @@ Quick example:
 name: my-skill
 description: Does a thing with an API.
 metadata:
-  openclaw:
+  special-agent:
     requires:
       env:
         - MY_API_KEY

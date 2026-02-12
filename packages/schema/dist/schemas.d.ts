@@ -251,20 +251,20 @@ export declare const NixPluginSpecSchema: import("arktype/internal/variants/obje
     systems?: string[] | undefined;
 }, {}>;
 export type NixPluginSpec = (typeof NixPluginSpecSchema)[inferred];
-export declare const ClawdbotConfigSpecSchema: import("arktype/internal/variants/object.ts").ObjectType<{
+export declare const SpecialAgentConfigSpecSchema: import("arktype/internal/variants/object.ts").ObjectType<{
     requiredEnv?: string[] | undefined;
     stateDirs?: string[] | undefined;
     example?: string | undefined;
 }, {}>;
-export type ClawdbotConfigSpec = (typeof ClawdbotConfigSpecSchema)[inferred];
-export declare const ClawdisRequiresSchema: import("arktype/internal/variants/object.ts").ObjectType<{
+export type SpecialAgentConfigSpec = (typeof SpecialAgentConfigSpecSchema)[inferred];
+export declare const SpecialAgentRequiresSchema: import("arktype/internal/variants/object.ts").ObjectType<{
     bins?: string[] | undefined;
     anyBins?: string[] | undefined;
     env?: string[] | undefined;
     config?: string[] | undefined;
 }, {}>;
-export type ClawdisRequires = (typeof ClawdisRequiresSchema)[inferred];
-export declare const ClawdisSkillMetadataSchema: import("arktype/internal/variants/object.ts").ObjectType<{
+export type SpecialAgentRequires = (typeof SpecialAgentRequiresSchema)[inferred];
+export declare const SpecialAgentSkillMetadataSchema: import("arktype/internal/variants/object.ts").ObjectType<{
     always?: boolean | undefined;
     skillKey?: string | undefined;
     primaryEnv?: string | undefined;
@@ -298,4 +298,4 @@ export declare const ClawdisSkillMetadataSchema: import("arktype/internal/varian
         example?: string | undefined;
     } | undefined;
 }, {}>;
-export type ClawdisSkillMetadata = (typeof ClawdisSkillMetadataSchema)[inferred];
+export type SpecialAgentSkillMetadata = (typeof SpecialAgentSkillMetadataSchema)[inferred];

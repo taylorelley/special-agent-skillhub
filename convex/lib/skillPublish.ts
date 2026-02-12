@@ -13,7 +13,7 @@ import {
   getFrontmatterMetadata,
   hashSkillFiles,
   isTextFile,
-  parseClawdisMetadata,
+  parseSpecialAgentMetadata,
   parseFrontmatter,
   sanitizePath,
 } from './skills'
@@ -101,7 +101,7 @@ export async function publishVersionForUser(
 
   const readmeText = await fetchText(ctx, readmeFile.storageId)
   const frontmatter = parseFrontmatter(readmeText)
-  const clawdis = parseClawdisMetadata(frontmatter)
+  const specialAgent = parseSpecialAgentMetadata(frontmatter)
   const metadata = mergeSourceIntoMetadata(getFrontmatterMetadata(frontmatter), args.source)
 
   const otherFiles = [] as Array<{ path: string; content: string }>
@@ -165,7 +165,7 @@ export async function publishVersionForUser(
     parsed: {
       frontmatter,
       metadata,
-      clawdis,
+      specialAgent,
     },
     embedding,
   })) as PublishResult
