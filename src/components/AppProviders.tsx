@@ -1,8 +1,9 @@
 import { ConvexAuthProvider } from '@convex-dev/auth/react'
-import { convex } from '../convex/client'
+import { getConvexClient } from '../convex/client'
 import { UserBootstrap } from './UserBootstrap'
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
+  const convex = getConvexClient()
   return (
     <ConvexAuthProvider
       client={convex}
