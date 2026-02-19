@@ -31,7 +31,10 @@ function getServerUrl(pathname: string) {
 export async function getMarkDataUrl() {
   if (!markDataUrlPromise) {
     markDataUrlPromise = (async () => {
-      const candidates = [getServerUrl('skillhub-mark.png'), getServerUrl('public/skillhub-mark.png')]
+      const candidates = [
+        getServerUrl('skillhub-mark.png'),
+        getServerUrl('public/skillhub-mark.png'),
+      ]
       let lastError: unknown = null
       for (const url of candidates) {
         try {

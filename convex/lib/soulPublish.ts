@@ -3,8 +3,8 @@ import semver from 'semver'
 import { internal } from '../_generated/api'
 import type { Doc, Id } from '../_generated/dataModel'
 import type { ActionCtx } from '../_generated/server'
+import { requireProviderAccountAge } from './accountAge'
 import { generateEmbedding } from './embeddings'
-import { requireGitHubAccountAge } from './githubAccount'
 import {
   buildEmbeddingText,
   getFrontmatterMetadata,
@@ -92,7 +92,7 @@ export async function publishSoulVersionForUser(
     throw new ConvexError('Version must be valid semver')
   }
 
-  await requireGitHubAccountAge(ctx, userId)
+  await requireProviderAccountAge(ctx, userId)
 
   const suppliedChangelog = args.changelog.trim()
   const changelogSource = suppliedChangelog ? ('user' as const) : ('auto' as const)

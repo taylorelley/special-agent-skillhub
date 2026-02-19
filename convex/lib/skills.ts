@@ -1,11 +1,11 @@
 import {
-  type SpecialAgentConfigSpec,
-  type SpecialAgentSkillMetadata,
-  SpecialAgentSkillMetadataSchema,
   isTextContentType,
   type NixPluginSpec,
   parseArk,
   type SkillInstallSpec,
+  type SpecialAgentConfigSpec,
+  type SpecialAgentSkillMetadata,
+  SpecialAgentSkillMetadataSchema,
   TEXT_FILE_EXTENSION_SET,
 } from 'skillhub-schema'
 import { parse as parseYaml } from 'yaml'
@@ -52,6 +52,14 @@ export function getFrontmatterMetadata(frontmatter: ParsedSkillFrontmatter) {
       // Strip trailing commas in JSON objects/arrays (common authoring mistake)
       const cleaned = raw.replace(/,\s*([\]}])/g, '$1')
       const parsed = JSON.parse(cleaned) as unknown
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        // Normalize legacy 'special-agent' key to camelCase 'specialAgent'
+        const obj = parsed as Record<string, unknown>
+        if ('special-agent' in obj && !('specialAgent' in obj)) {
+          obj.specialAgent = obj['special-agent']
+          delete obj['special-agent']
+        }
+      }
       return parsed ?? undefined
     } catch {
       return undefined
@@ -67,19 +75,14 @@ export function parseSpecialAgentMetadata(frontmatter: ParsedSkillFrontmatter) {
     metadata && typeof metadata === 'object' && !Array.isArray(metadata)
       ? (metadata as Record<string, unknown>)
       : undefined
-  const specialAgentMeta = metadataRecord?.special-agent
-  const specialAgentMeta = metadataRecord?.specialAgent
-  const specialAgentMeta = metadataRecord?.special-agent
+  const specialAgentMeta = metadataRecord?.['special-agent'] ?? metadataRecord?.specialAgent
   const metadataSource =
     specialAgentMeta && typeof specialAgentMeta === 'object' && !Array.isArray(specialAgentMeta)
       ? (specialAgentMeta as Record<string, unknown>)
-      : specialAgentMeta && typeof specialAgentMeta === 'object' && !Array.isArray(specialAgentMeta)
-        ? (specialAgentMeta as Record<string, unknown>)
-        : specialAgentMeta && typeof specialAgentMeta === 'object' && !Array.isArray(specialAgentMeta)
-          ? (specialAgentMeta as Record<string, unknown>)
-          : undefined
+      : undefined
   const specialAgentRaw = metadataSource ?? frontmatter.specialAgent
-  if (!specialAgentRaw || typeof specialAgentRaw !== 'object' || Array.isArray(specialAgentRaw)) return undefined
+  if (!specialAgentRaw || typeof specialAgentRaw !== 'object' || Array.isArray(specialAgentRaw))
+    return undefined
 
   try {
     const specialAgentObj = specialAgentRaw as Record<string, unknown>
@@ -87,7 +90,9 @@ export function parseSpecialAgentMetadata(frontmatter: ParsedSkillFrontmatter) {
       typeof specialAgentObj.requires === 'object' && specialAgentObj.requires !== null
         ? (specialAgentObj.requires as Record<string, unknown>)
         : undefined
-    const installRaw = Array.isArray(specialAgentObj.install) ? (specialAgentObj.install as unknown[]) : []
+    const installRaw = Array.isArray(specialAgentObj.install)
+      ? (specialAgentObj.install as unknown[])
+      : []
     const install = installRaw
       .map((entry) => parseInstallSpec(entry))
       .filter((entry): entry is SkillInstallSpec => Boolean(entry))
@@ -98,7 +103,8 @@ export function parseSpecialAgentMetadata(frontmatter: ParsedSkillFrontmatter) {
     if (typeof specialAgentObj.emoji === 'string') metadata.emoji = specialAgentObj.emoji
     if (typeof specialAgentObj.homepage === 'string') metadata.homepage = specialAgentObj.homepage
     if (typeof specialAgentObj.skillKey === 'string') metadata.skillKey = specialAgentObj.skillKey
-    if (typeof specialAgentObj.primaryEnv === 'string') metadata.primaryEnv = specialAgentObj.primaryEnv
+    if (typeof specialAgentObj.primaryEnv === 'string')
+      metadata.primaryEnv = specialAgentObj.primaryEnv
     if (typeof specialAgentObj.cliHelp === 'string') metadata.cliHelp = specialAgentObj.cliHelp
     if (osRaw.length > 0) metadata.os = osRaw
 

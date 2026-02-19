@@ -4,7 +4,7 @@ import { Menu, Monitor, Moon, Sun } from 'lucide-react'
 import { useMemo, useRef } from 'react'
 import { gravatarUrl } from '../lib/gravatar'
 import { isModerator } from '../lib/roles'
-import { getSkillHubSiteUrl, getSiteMode, getSiteName } from '../lib/site'
+import { getSiteMode, getSiteName, getSkillHubSiteUrl } from '../lib/site'
 import { applyTheme, useThemeMode } from '../lib/theme'
 import { startThemeTransition } from '../lib/theme-transition'
 import { useAuthStatus } from '../lib/useAuthStatus'
@@ -31,6 +31,16 @@ export default function Header() {
   const handle = me?.handle ?? me?.displayName ?? 'user'
   const initial = (me?.displayName ?? me?.name ?? handle).charAt(0).toUpperCase()
   const isStaff = isModerator(me)
+
+  const showGitHub = import.meta.env.VITE_AUTH_SHOW_GITHUB !== 'false'
+  const gitlabName = import.meta.env.VITE_AUTH_GITLAB_NAME as string | undefined
+  const oidcName = import.meta.env.VITE_AUTH_OIDC_NAME as string | undefined
+  // true when the multi-option layout is needed; false falls through to the
+  // legacy single-button GitHub path.  When GitHub is disabled and no
+  // alternatives are configured the options div renders empty, so guard with
+  // showGitHub so the else branch (simple GitHub button) only shows when it
+  // would actually work.
+  const hasAlternatives = Boolean(gitlabName) || Boolean(oidcName) || showGitHub
 
   const setTheme = (next: 'system' | 'light' | 'dark') => {
     startThemeTransition({
@@ -277,6 +287,42 @@ export default function Header() {
                 <DropdownMenuItem onClick={() => void signOut()}>Sign out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : hasAlternatives ? (
+            <div className="sign-in-options">
+              {showGitHub && (
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => void signIn('github')}
+                >
+                  <span className="sign-in-label">Sign in</span>
+                  <span className="sign-in-provider">with GitHub</span>
+                </button>
+              )}
+              {gitlabName && (
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => void signIn('gitlab')}
+                >
+                  <span className="sign-in-label">Sign in</span>
+                  <span className="sign-in-provider">with {gitlabName}</span>
+                </button>
+              )}
+              {oidcName && (
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => void signIn('oidc')}
+                >
+                  <span className="sign-in-label">Sign in</span>
+                  <span className="sign-in-provider">with {oidcName}</span>
+                </button>
+              )}
+            </div>
           ) : (
             <button
               className="btn btn-primary"

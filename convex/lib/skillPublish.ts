@@ -3,18 +3,18 @@ import semver from 'semver'
 import { api, internal } from '../_generated/api'
 import type { Doc, Id } from '../_generated/dataModel'
 import type { ActionCtx, MutationCtx } from '../_generated/server'
+import { requireProviderAccountAge } from './accountAge'
 import { getSkillBadgeMap, isSkillHighlighted } from './badges'
 import { generateChangelogForPublish } from './changelog'
 import { generateEmbedding } from './embeddings'
-import { requireGitHubAccountAge } from './githubAccount'
 import type { PublicUser } from './public'
 import {
   buildEmbeddingText,
   getFrontmatterMetadata,
   hashSkillFiles,
   isTextFile,
-  parseSpecialAgentMetadata,
   parseFrontmatter,
+  parseSpecialAgentMetadata,
   sanitizePath,
 } from './skills'
 import type { WebhookSkillPayload } from './webhooks'
@@ -69,7 +69,7 @@ export async function publishVersionForUser(
     throw new ConvexError('Version must be valid semver')
   }
 
-  await requireGitHubAccountAge(ctx, userId)
+  await requireProviderAccountAge(ctx, userId)
 
   const suppliedChangelog = args.changelog.trim()
   const changelogSource = suppliedChangelog ? ('user' as const) : ('auto' as const)

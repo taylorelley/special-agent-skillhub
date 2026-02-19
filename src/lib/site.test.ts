@@ -5,13 +5,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   detectSiteMode,
   detectSiteModeFromUrl,
-  getSkillHubSiteUrl,
   getOnlyCrabsHost,
   getOnlyCrabsSiteUrl,
   getSiteDescription,
   getSiteMode,
   getSiteName,
   getSiteUrlForMode,
+  getSkillHubSiteUrl,
 } from './site'
 
 function withMetaEnv<T>(values: Record<string, string | undefined>, run: () => T): T {

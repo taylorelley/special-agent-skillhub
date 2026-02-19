@@ -1,8 +1,8 @@
 import { intro, outro } from '@clack/prompts'
 import { readGlobalConfig } from '../../config.js'
 import { hashSkillFiles, listTextFiles, readSkillOrigin } from '../../skills.js'
-import { resolveSpecialAgentSkillRoots } from '../specialAgentConfig.js'
 import { getFallbackSkillRoots } from '../scanSkills.js'
+import { resolveSpecialAgentSkillRoots } from '../specialAgentConfig.js'
 import type { GlobalOpts } from '../types.js'
 import { createSpinner, fail, formatError, isInteractive } from '../ui.js'
 import { cmdPublish } from './publish.js'
@@ -40,7 +40,9 @@ export async function cmdSync(opts: GlobalOpts, options: SyncOptions, inputAllow
   const selectedRoots = buildScanRoots(opts, options.root)
   const specialAgentRoots = await resolveSpecialAgentSkillRoots()
   const combinedRoots = Array.from(
-    new Set([...selectedRoots, ...specialAgentRoots.roots].map((root) => root.trim()).filter(Boolean)),
+    new Set(
+      [...selectedRoots, ...specialAgentRoots.roots].map((root) => root.trim()).filter(Boolean),
+    ),
   )
   const concurrency = normalizeConcurrency(options.concurrency)
 

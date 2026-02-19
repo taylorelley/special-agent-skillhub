@@ -1,5 +1,5 @@
-import { TEXT_FILE_EXTENSION_SET } from 'skillhub-schema'
 import { gunzipSync, unzipSync } from 'fflate'
+import { TEXT_FILE_EXTENSION_SET } from 'skillhub-schema'
 
 const TEXT_TYPES = new Map([
   ['md', 'text/markdown'],

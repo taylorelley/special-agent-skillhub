@@ -1,6 +1,6 @@
-import { TEXT_FILE_EXTENSION_SET } from 'skillhub-schema'
 import { zipSync } from 'fflate'
 import semver from 'semver'
+import { TEXT_FILE_EXTENSION_SET } from 'skillhub-schema'
 import { parseFrontmatter } from './skills'
 
 export type GitHubImportUrl = {

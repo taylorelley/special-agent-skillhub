@@ -1,9 +1,9 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import type { SpecialAgentSkillMetadata, SkillInstallSpec } from 'skillhub-schema'
 import { useAction, useMutation, useQuery } from 'convex/react'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import type { SkillInstallSpec, SpecialAgentSkillMetadata } from 'skillhub-schema'
 import { api } from '../../convex/_generated/api'
 import type { Doc, Id } from '../../convex/_generated/dataModel'
 import { getSkillBadges } from '../lib/badges'
@@ -474,7 +474,9 @@ export function SkillDetailPage({
   const versionById = new Map<Id<'skillVersions'>, Doc<'skillVersions'>>(
     (diffVersions ?? versions ?? []).map((version) => [version._id, version]),
   )
-  const specialAgent = (latestVersion?.parsed as { specialAgent?: SpecialAgentSkillMetadata } | undefined)?.specialAgent
+  const specialAgent = (
+    latestVersion?.parsed as { specialAgent?: SpecialAgentSkillMetadata } | undefined
+  )?.specialAgent
   const osLabels = useMemo(() => formatOsList(specialAgent?.os), [specialAgent?.os])
   const requirements = specialAgent?.requires
   const installSpecs = specialAgent?.install ?? []
@@ -568,8 +570,8 @@ export function SkillDetailPage({
             <div className="pending-banner-content">
               <strong>Skill blocked — malicious content detected</strong>
               <p>
-                SkillHub Security flagged this skill as malicious. Downloads are disabled. Review the
-                scan results below.
+                SkillHub Security flagged this skill as malicious. Downloads are disabled. Review
+                the scan results below.
               </p>
             </div>
           </div>
@@ -849,7 +851,9 @@ export function SkillDetailPage({
                       Runtime requirements
                     </h3>
                     <div className="skill-panel-body">
-                      {specialAgent?.emoji ? <div className="tag">{specialAgent.emoji} SpecialAgent</div> : null}
+                      {specialAgent?.emoji ? (
+                        <div className="tag">{specialAgent.emoji} SpecialAgent</div>
+                      ) : null}
                       {osLabels.length ? (
                         <div className="stat">
                           <strong>OS</strong>

@@ -1,6 +1,11 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Id } from './_generated/dataModel'
-import { BANNED_REAUTH_MESSAGE, handleSoftDeletedUserReauth } from './auth'
+import {
+  BANNED_REAUTH_MESSAGE,
+  handleSignupRestriction,
+  handleSoftDeletedUserReauth,
+  SIGNUP_BLOCKED_MESSAGE,
+} from './auth'
 
 function makeCtx({
   user,
@@ -65,5 +70,31 @@ describe('handleSoftDeletedUserReauth', () => {
     ).rejects.toThrow(BANNED_REAUTH_MESSAGE)
 
     expect(ctx.db.patch).not.toHaveBeenCalled()
+  })
+})
+
+describe('handleSignupRestriction', () => {
+  afterEach(() => {
+    delete process.env.AUTH_ALLOW_NEW_SIGNUPS
+  })
+
+  it('allows new user when env var is not set', () => {
+    expect(() => handleSignupRestriction(null)).not.toThrow()
+  })
+
+  it('allows new user when AUTH_ALLOW_NEW_SIGNUPS=true', () => {
+    process.env.AUTH_ALLOW_NEW_SIGNUPS = 'true'
+    expect(() => handleSignupRestriction(null)).not.toThrow()
+  })
+
+  it('blocks new user when AUTH_ALLOW_NEW_SIGNUPS=false', () => {
+    process.env.AUTH_ALLOW_NEW_SIGNUPS = 'false'
+    expect(() => handleSignupRestriction(null)).toThrow(SIGNUP_BLOCKED_MESSAGE)
+  })
+
+  it('allows existing user to sign in even when signups are blocked', () => {
+    process.env.AUTH_ALLOW_NEW_SIGNUPS = 'false'
+    const existingUserId = 'users:1' as Id<'users'>
+    expect(() => handleSignupRestriction(existingUserId)).not.toThrow()
   })
 })
