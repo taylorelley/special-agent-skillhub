@@ -5,8 +5,8 @@ import {
   getFrontmatterValue,
   hashSkillFiles,
   isTextFile,
-  parseSpecialAgentMetadata,
   parseFrontmatter,
+  parseSpecialAgentMetadata,
   sanitizePath,
 } from './skills'
 
@@ -112,7 +112,9 @@ describe('skills utils', () => {
       `---\nmetadata: {"special-agent":{"nix":{"plugin":"github:special-agent/nix-steipete-tools?dir=tools/peekaboo","systems":["aarch64-darwin"]}}}\n---\nBody`,
     )
     const specialAgent = parseSpecialAgentMetadata(frontmatter)
-    expect(specialAgent?.nix?.plugin).toBe('github:special-agent/nix-steipete-tools?dir=tools/peekaboo')
+    expect(specialAgent?.nix?.plugin).toBe(
+      'github:special-agent/nix-steipete-tools?dir=tools/peekaboo',
+    )
     expect(specialAgent?.nix?.systems).toEqual(['aarch64-darwin'])
   })
 

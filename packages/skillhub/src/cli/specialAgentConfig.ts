@@ -40,33 +40,20 @@ export async function resolveSpecialAgentSkillRoots(): Promise<SpecialAgentSkill
   const labels: Record<string, string> = {}
 
   const specialAgentStateDir = resolveSpecialAgentStateDir()
-  const sharedSkills = resolveUserPath(join(specialAgentStateDir, 'skills'))
-  pushRoot(roots, labels, sharedSkills, 'Shared skills')
-
-  const specialAgentStateDir = resolveSpecialAgentStateDir()
   const specialAgentShared = resolveUserPath(join(specialAgentStateDir, 'skills'))
   pushRoot(roots, labels, specialAgentShared, 'Special Agent: Shared skills')
 
-  const [specialAgentConfig, specialAgentConfig] = await Promise.all([
-    readSpecialAgentConfig(),
-    readSpecialAgentConfig(),
-  ])
-  if (!specialAgentConfig && !specialAgentConfig) return { roots, labels }
+  const specialAgentConfig = await readSpecialAgentConfig()
+  if (!specialAgentConfig) return { roots, labels }
 
-  if (specialAgentConfig) {
-    addConfigRoots(specialAgentConfig, roots, labels)
-  }
-  if (specialAgentConfig) {
-    addConfigRoots(specialAgentConfig, roots, labels, 'Special Agent')
-  }
+  addConfigRoots(specialAgentConfig, roots, labels, 'Special Agent')
 
   return { roots, labels }
 }
 
 export async function resolveSpecialAgentDefaultWorkspace(): Promise<string | null> {
   const config = await readSpecialAgentConfig()
-  const specialAgentConfig = await readSpecialAgentConfig()
-  if (!config && !specialAgentConfig) return null
+  if (!config) return null
 
   const defaultsWorkspace = resolveUserPath(
     config?.agents?.defaults?.workspace ?? config?.agent?.workspace ?? '',
@@ -79,29 +66,7 @@ export async function resolveSpecialAgentDefaultWorkspace(): Promise<string | nu
   const listWorkspace = resolveUserPath(defaultAgent?.workspace ?? '')
   if (listWorkspace) return listWorkspace
 
-  if (!specialAgentConfig) return null
-  const specialAgentDefaults = resolveUserPath(
-    specialAgentConfig.agents?.defaults?.workspace ?? specialAgentConfig.agent?.workspace ?? '',
-  )
-  if (specialAgentDefaults) return specialAgentDefaults
-  const specialAgentAgents = specialAgentConfig.agents?.list ?? []
-  const specialAgentDefaultAgent =
-    specialAgentAgents.find((entry) => entry.default) ??
-    specialAgentAgents.find((entry) => entry.id === 'main')
-  const specialAgentWorkspace = resolveUserPath(specialAgentDefaultAgent?.workspace ?? '')
-  return specialAgentWorkspace || null
-}
-
-function resolveSpecialAgentStateDir() {
-  const override = process.env.SPECIAL_AGENT_STATE_DIR?.trim()
-  if (override) return resolveUserPath(override)
-  return join(homedir(), '.special-agent')
-}
-
-function resolveSpecialAgentConfigPath() {
-  const override = process.env.SPECIAL_AGENT_CONFIG_PATH?.trim()
-  if (override) return resolveUserPath(override)
-  return join(resolveSpecialAgentStateDir(), 'special-agent.json')
+  return null
 }
 
 function resolveSpecialAgentStateDir() {
@@ -123,10 +88,6 @@ function resolveUserPath(input: string) {
     return resolve(trimmed.replace(/^~(?=$|[\\/])/, homedir()))
   }
   return resolve(trimmed)
-}
-
-async function readSpecialAgentConfig(): Promise<SpecialAgentConfig | null> {
-  return readConfigFile(resolveSpecialAgentConfigPath())
 }
 
 async function readSpecialAgentConfig(): Promise<SpecialAgentConfig | null> {

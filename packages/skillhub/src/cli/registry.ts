@@ -4,7 +4,11 @@ import type { GlobalOpts } from './types.js'
 
 export const DEFAULT_SITE = 'https://skillhub.ai'
 export const DEFAULT_REGISTRY = 'https://skillhub.ai'
-const LEGACY_REGISTRY_HOSTS = new Set(['auth.skillhub.com', 'auth.skillhub.com', 'auth.skillhub.ai'])
+const LEGACY_REGISTRY_HOSTS = new Set([
+  'auth.skillhub.com',
+  'auth.skillhub.com',
+  'auth.skillhub.ai',
+])
 
 export async function resolveRegistry(opts: GlobalOpts) {
   const explicit = opts.registrySource !== 'default' ? opts.registry.trim() : ''

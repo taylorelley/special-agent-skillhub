@@ -2,10 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Id } from './_generated/dataModel'
 import {
   BANNED_REAUTH_MESSAGE,
-  SIGNUP_BLOCKED_MESSAGE,
   handleSignupRestriction,
   handleSoftDeletedUserReauth,
   resolveProviderFromAccount,
+  SIGNUP_BLOCKED_MESSAGE,
 } from './auth'
 
 function makeCtx({

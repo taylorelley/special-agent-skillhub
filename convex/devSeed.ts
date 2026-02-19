@@ -3,7 +3,7 @@ import { internal } from './_generated/api'
 import type { ActionCtx } from './_generated/server'
 import { internalAction, internalMutation } from './_generated/server'
 import { EMBEDDING_DIMENSIONS } from './lib/embeddings'
-import { parseSpecialAgentMetadata, parseFrontmatter } from './lib/skills'
+import { parseFrontmatter, parseSpecialAgentMetadata } from './lib/skills'
 
 type SeedSkillSpec = {
   slug: string
@@ -32,7 +32,7 @@ const SEED_SKILLS: SeedSkillSpec[] = [
     summary: 'Check padel court availability and manage bookings via Playtomic.',
     version: '0.1.0',
     metadata: {
-      special-agent: {
+      'special-agent': {
         nix: {
           plugin: 'github:joshp123/padel-cli',
           systems: ['aarch64-darwin', 'x86_64-linux'],
@@ -110,7 +110,7 @@ Only the authorized booker can confirm bookings. If the requester is not authori
     summary: 'Operate GoHome via gRPC discovery, metrics, and Grafana dashboards.',
     version: '0.1.0',
     metadata: {
-      special-agent: {
+      'special-agent': {
         nix: {
           plugin: 'github:joshp123/gohome',
           systems: ['x86_64-linux', 'aarch64-linux'],
@@ -183,7 +183,7 @@ Only call write RPCs after explicit user approval.
     summary: 'Teach Mandarin with the xuezh engine for review, speaking, and audits.',
     version: '0.1.0',
     metadata: {
-      special-agent: {
+      'special-agent': {
         nix: {
           plugin: 'github:joshp123/xuezh',
           systems: ['aarch64-darwin', 'x86_64-linux'],

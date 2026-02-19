@@ -11,7 +11,7 @@ import { internal } from './_generated/api'
 import type { Id } from './_generated/dataModel'
 import type { ActionCtx } from './_generated/server'
 import { internalAction, internalMutation } from './_generated/server'
-import { parseSpecialAgentMetadata, parseFrontmatter } from './lib/skills'
+import { parseFrontmatter, parseSpecialAgentMetadata } from './lib/skills'
 
 type SeedSkillSpec = {
   slug: string
@@ -66,7 +66,7 @@ Use this skill to ${summary.toLowerCase()}.
     summary,
     version: '0.1.0',
     metadata: {
-      special-agent: {
+      'special-agent': {
         nix: {
           plugin: `github:example/${slug}`,
           systems: ['aarch64-darwin', 'x86_64-linux'],

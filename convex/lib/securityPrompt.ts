@@ -256,11 +256,17 @@ export function assembleEvalUserMessage(ctx: SkillEvalContext): string {
   const rawSpecialAgent = (ctx.parsed.specialAgent ?? {}) as Record<string, unknown>
   const meta = (ctx.parsed.metadata ?? {}) as Record<string, unknown>
   const specialAgentFallback =
-    meta.special-agent && typeof meta.special-agent === 'object' && !Array.isArray(meta.special-agent)
-      ? (meta.special-agent as Record<string, unknown>)
+    meta.special - agent &&
+    typeof meta.special - agent === 'object' &&
+    !Array.isArray(meta.special - agent)
+      ? ((meta.special - agent) as Record<string, unknown>)
       : {}
-  const specialAgent = Object.keys(rawSpecialAgent).length > 0 ? rawSpecialAgent : specialAgentFallback
-  const requires = (specialAgent.requires ?? specialAgentFallback.requires ?? {}) as Record<string, unknown>
+  const specialAgent =
+    Object.keys(rawSpecialAgent).length > 0 ? rawSpecialAgent : specialAgentFallback
+  const requires = (specialAgent.requires ?? specialAgentFallback.requires ?? {}) as Record<
+    string,
+    unknown
+  >
   const install = (specialAgent.install ?? []) as Array<Record<string, unknown>>
 
   const codeExtensions = new Set([
@@ -310,7 +316,8 @@ export function assembleEvalUserMessage(ctx: SkillEvalContext): string {
   // Flags
   const always = fm.always ?? specialAgent.always
   const userInvocable = fm['user-invocable'] ?? specialAgent.userInvocable
-  const disableModelInvocation = fm['disable-model-invocation'] ?? specialAgent.disableModelInvocation
+  const disableModelInvocation =
+    fm['disable-model-invocation'] ?? specialAgent.disableModelInvocation
   const os = specialAgent.os
   sections.push(`**Flags:**
 - always: ${formatWithDefault(always, 'false (default)')}

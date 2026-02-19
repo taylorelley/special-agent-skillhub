@@ -5,22 +5,17 @@ import { dirname, join, resolve } from 'node:path'
 import { type GlobalConfig, GlobalConfigSchema, parseArk } from './schema/index.js'
 
 export function getGlobalConfigPath() {
-  const override =
-    process.env.SKILLHUB_CONFIG_PATH?.trim() ?? process.env.SKILLHUB_CONFIG_PATH?.trim()
+  const override = process.env.SKILLHUB_CONFIG_PATH?.trim()
   if (override) return resolve(override)
   const home = homedir()
   if (process.platform === 'darwin') {
     const skillhubPath = join(home, 'Library', 'Application Support', 'skillhub', 'config.json')
-    const skillhubPath = join(home, 'Library', 'Application Support', 'skillhub', 'config.json')
-    if (existsSync(skillhubPath)) return skillhubPath
     if (existsSync(skillhubPath)) return skillhubPath
     return skillhubPath
   }
   const xdg = process.env.XDG_CONFIG_HOME
   if (xdg) {
     const skillhubPath = join(xdg, 'skillhub', 'config.json')
-    const skillhubPath = join(xdg, 'skillhub', 'config.json')
-    if (existsSync(skillhubPath)) return skillhubPath
     if (existsSync(skillhubPath)) return skillhubPath
     return skillhubPath
   }
@@ -28,15 +23,11 @@ export function getGlobalConfigPath() {
     const appData = process.env.APPDATA
     if (appData) {
       const skillhubPath = join(appData, 'skillhub', 'config.json')
-      const skillhubPath = join(appData, 'skillhub', 'config.json')
-      if (existsSync(skillhubPath)) return skillhubPath
       if (existsSync(skillhubPath)) return skillhubPath
       return skillhubPath
     }
   }
   const skillhubPath = join(home, '.config', 'skillhub', 'config.json')
-  const skillhubPath = join(home, '.config', 'skillhub', 'config.json')
-  if (existsSync(skillhubPath)) return skillhubPath
   if (existsSync(skillhubPath)) return skillhubPath
   return skillhubPath
 }

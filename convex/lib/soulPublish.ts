@@ -3,8 +3,8 @@ import semver from 'semver'
 import { internal } from '../_generated/api'
 import type { Doc, Id } from '../_generated/dataModel'
 import type { ActionCtx } from '../_generated/server'
-import { generateEmbedding } from './embeddings'
 import { requireProviderAccountAge } from './accountAge'
+import { generateEmbedding } from './embeddings'
 import {
   buildEmbeddingText,
   getFrontmatterMetadata,

@@ -2,8 +2,8 @@ import {
   getFrontmatterMetadata,
   getFrontmatterValue,
   type ParsedSkillFrontmatter,
-  parseSpecialAgentMetadata,
   parseFrontmatter,
+  parseSpecialAgentMetadata,
 } from './skills'
 
 export type ParsedSkillData = {
