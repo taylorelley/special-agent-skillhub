@@ -98,6 +98,10 @@ function CliAuth() {
     )
   }
 
+  const showGitHub = import.meta.env.VITE_AUTH_SHOW_GITHUB !== 'false'
+  const gitlabName = import.meta.env.VITE_AUTH_GITLAB_NAME as string | undefined
+  const oidcName = import.meta.env.VITE_AUTH_OIDC_NAME as string | undefined
+
   if (!isAuthenticated || !me) {
     return (
       <main className="section">
@@ -106,14 +110,36 @@ function CliAuth() {
             CLI login
           </h1>
           <p className="section-subtitle">Sign in to create an API token for the CLI.</p>
-          <button
-            className="btn btn-primary"
-            type="button"
-            disabled={isLoading}
-            onClick={() => void signIn('github')}
-          >
-            Sign in with GitHub
-          </button>
+          {showGitHub && (
+            <button
+              className="btn btn-primary"
+              type="button"
+              disabled={isLoading}
+              onClick={() => void signIn('github')}
+            >
+              Sign in with GitHub
+            </button>
+          )}
+          {gitlabName && (
+            <button
+              className="btn btn-primary"
+              type="button"
+              disabled={isLoading}
+              onClick={() => void signIn('gitlab')}
+            >
+              Sign in with {gitlabName}
+            </button>
+          )}
+          {oidcName && (
+            <button
+              className="btn btn-primary"
+              type="button"
+              disabled={isLoading}
+              onClick={() => void signIn('oidc')}
+            >
+              Sign in with {oidcName}
+            </button>
+          )}
         </div>
       </main>
     )

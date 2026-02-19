@@ -61,6 +61,21 @@ export const updateGithubMetaInternal = internalMutation({
   },
 })
 
+export const updateGitlabMetaInternal = internalMutation({
+  args: {
+    userId: v.id('users'),
+    gitlabCreatedAt: v.number(),
+    gitlabFetchedAt: v.number(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.userId, {
+      gitlabCreatedAt: args.gitlabCreatedAt,
+      gitlabFetchedAt: args.gitlabFetchedAt,
+      updatedAt: args.gitlabFetchedAt,
+    })
+  },
+})
+
 export const me = query({
   args: {},
   handler: async (ctx) => {
