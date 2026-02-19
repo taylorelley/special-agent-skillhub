@@ -1,5 +1,5 @@
-/* @vitest-environment node -- Node is required: tests use fs (mkdtemp, writeFile) and resolve real paths */
-import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
+// @vitest-environment node -- Node is required: tests use fs (mkdtemp, writeFile) and resolve real paths
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -9,14 +9,18 @@ import {
 } from './specialAgentConfig.js'
 
 const originalEnv = { ...process.env }
+const dirsToClean: string[] = []
 
-afterEach(() => {
+afterEach(async () => {
   process.env = { ...originalEnv }
+  await Promise.all(dirsToClean.map((dir) => rm(dir, { recursive: true, force: true })))
+  dirsToClean.length = 0
 })
 
 describe('resolveSpecialAgentSkillRoots', () => {
   it('reads JSON5 config and resolves per-agent + shared skill roots', async () => {
     const base = await mkdtemp(join(tmpdir(), 'skillhub-special-agent-'))
+    dirsToClean.push(base)
     const home = join(base, 'home')
     const specialAgentStateDir = join(base, 'special-agent-state')
 
@@ -71,52 +75,9 @@ describe('resolveSpecialAgentSkillRoots', () => {
     expect(labels[resolve('/opt/skills')]).toBe('Special Agent: Extra: skills')
   })
 
-  it('resolves default workspace from agents.defaults and agents.list', async () => {
-    const base = await mkdtemp(join(tmpdir(), 'skillhub-special-agent-default-'))
-    const specialAgentStateDir = join(base, 'special-agent-state')
-    const workspaceMain = join(base, 'workspace-main')
-
-    process.env.SPECIAL_AGENT_STATE_DIR = specialAgentStateDir
-
-    const config = `{
-      agents: {
-        defaults: { workspace: "${workspaceMain}", },
-        list: [
-          { id: 'main', workspace: "${join(base, 'workspace-list')}", default: true },
-        ],
-      },
-    }`
-    await mkdir(specialAgentStateDir, { recursive: true })
-    await writeFile(join(specialAgentStateDir, 'special-agent.json'), config, 'utf8')
-
-    const workspace = await resolveSpecialAgentDefaultWorkspace()
-    expect(workspace).toBe(resolve(workspaceMain))
-  })
-
-  it('falls back to default agent in agents.list when defaults missing', async () => {
-    const base = await mkdtemp(join(tmpdir(), 'skillhub-special-agent-list-'))
-    const specialAgentStateDir = join(base, 'special-agent-state')
-    const workspaceMain = join(base, 'workspace-main')
-
-    process.env.SPECIAL_AGENT_STATE_DIR = specialAgentStateDir
-
-    const config = `{
-      agents: {
-        list: [
-          { id: 'main', workspace: "${workspaceMain}", default: true },
-          { id: 'work', workspace: "${join(base, 'workspace-work')}" },
-        ],
-      },
-    }`
-    await mkdir(specialAgentStateDir, { recursive: true })
-    await writeFile(join(specialAgentStateDir, 'special-agent.json'), config, 'utf8')
-
-    const workspace = await resolveSpecialAgentDefaultWorkspace()
-    expect(workspace).toBe(resolve(workspaceMain))
-  })
-
   it('respects SPECIAL_AGENT_STATE_DIR and SPECIAL_AGENT_CONFIG_PATH overrides', async () => {
     const base = await mkdtemp(join(tmpdir(), 'skillhub-special-agent-override-'))
+    dirsToClean.push(base)
     const specialAgentStateDir = join(base, 'special-agent-state')
     const configPath = join(base, 'config', 'special-agent.json')
 
@@ -145,6 +106,7 @@ describe('resolveSpecialAgentSkillRoots', () => {
 
   it('returns shared skills root when config is missing', async () => {
     const base = await mkdtemp(join(tmpdir(), 'skillhub-special-agent-missing-'))
+    dirsToClean.push(base)
     const specialAgentStateDir = join(base, 'special-agent-state')
 
     process.env.SPECIAL_AGENT_STATE_DIR = specialAgentStateDir
@@ -158,6 +120,7 @@ describe('resolveSpecialAgentSkillRoots', () => {
 
   it('supports Special Agent configuration files', async () => {
     const base = await mkdtemp(join(tmpdir(), 'skillhub-special-agent-'))
+    dirsToClean.push(base)
     const stateDir = join(base, 'special-agent-state')
     const workspace = join(base, 'special-agent-main')
     const configPath = join(stateDir, 'special-agent.json')
@@ -178,5 +141,53 @@ describe('resolveSpecialAgentSkillRoots', () => {
     )
     expect(labels[resolve(stateDir, 'skills')]).toBe('Special Agent: Shared skills')
     expect(labels[resolve(workspace, 'skills')]).toBe('Special Agent: Agent: main')
+  })
+})
+
+describe('resolveSpecialAgentDefaultWorkspace', () => {
+  it('resolves default workspace from agents.defaults when agents.list has default', async () => {
+    const base = await mkdtemp(join(tmpdir(), 'skillhub-special-agent-default-'))
+    dirsToClean.push(base)
+    const specialAgentStateDir = join(base, 'special-agent-state')
+    const workspaceMain = join(base, 'workspace-main')
+
+    process.env.SPECIAL_AGENT_STATE_DIR = specialAgentStateDir
+
+    const config = `{
+      agents: {
+        defaults: { workspace: "${workspaceMain}", },
+        list: [
+          { id: 'main', workspace: "${join(base, 'workspace-list')}", default: true },
+        ],
+      },
+    }`
+    await mkdir(specialAgentStateDir, { recursive: true })
+    await writeFile(join(specialAgentStateDir, 'special-agent.json'), config, 'utf8')
+
+    const workspace = await resolveSpecialAgentDefaultWorkspace()
+    expect(workspace).toBe(resolve(workspaceMain))
+  })
+
+  it('falls back to default agent in agents.list when agents.defaults is missing', async () => {
+    const base = await mkdtemp(join(tmpdir(), 'skillhub-special-agent-list-'))
+    dirsToClean.push(base)
+    const specialAgentStateDir = join(base, 'special-agent-state')
+    const workspaceMain = join(base, 'workspace-main')
+
+    process.env.SPECIAL_AGENT_STATE_DIR = specialAgentStateDir
+
+    const config = `{
+      agents: {
+        list: [
+          { id: 'main', workspace: "${workspaceMain}", default: true },
+          { id: 'work', workspace: "${join(base, 'workspace-work')}" },
+        ],
+      },
+    }`
+    await mkdir(specialAgentStateDir, { recursive: true })
+    await writeFile(join(specialAgentStateDir, 'special-agent.json'), config, 'utf8')
+
+    const workspace = await resolveSpecialAgentDefaultWorkspace()
+    expect(workspace).toBe(resolve(workspaceMain))
   })
 })

@@ -40,30 +40,6 @@ export function handleSignupRestriction(existingUserId: Id<'users'> | null): voi
   }
 }
 
-export async function resolveProviderFromAccount(
-  ctx: GenericMutationCtx<DataModel>,
-  userId: Id<'users'>,
-): Promise<string> {
-  // authAccounts table is defined in @convex-dev/auth's authTables (verified in docs)
-  const db = ctx.db as unknown as {
-    query: (table: string) => {
-      filter: (
-        fn: (q: {
-          eq: (a: unknown, b: unknown) => unknown
-          field: (f: string) => unknown
-        }) => unknown,
-      ) => {
-        first: () => Promise<{ provider?: string } | null>
-      }
-    }
-  }
-  const account = await db
-    .query('authAccounts')
-    .filter((q) => q.eq(q.field('userId'), userId))
-    .first()
-  return account?.provider ?? 'github'
-}
-
 const providers: Parameters<typeof convexAuth>[0]['providers'] = []
 
 const githubId = process.env.AUTH_GITHUB_ID

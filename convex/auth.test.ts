@@ -4,7 +4,6 @@ import {
   BANNED_REAUTH_MESSAGE,
   handleSignupRestriction,
   handleSoftDeletedUserReauth,
-  resolveProviderFromAccount,
   SIGNUP_BLOCKED_MESSAGE,
 } from './auth'
 
@@ -97,34 +96,5 @@ describe('handleSignupRestriction', () => {
     process.env.AUTH_ALLOW_NEW_SIGNUPS = 'false'
     const existingUserId = 'users:1' as Id<'users'>
     expect(() => handleSignupRestriction(existingUserId)).not.toThrow()
-  })
-})
-
-describe('resolveProviderFromAccount', () => {
-  function makeProviderCtx(provider: string | null) {
-    return {
-      db: {
-        query: () => ({
-          filter: () => ({
-            first: async () => (provider !== null ? { provider } : null),
-          }),
-        }),
-      },
-    }
-  }
-
-  it('returns the provider stored in authAccounts', async () => {
-    const ctx = makeProviderCtx('gitlab')
-    expect(await resolveProviderFromAccount(ctx as never, 'users:1' as never)).toBe('gitlab')
-  })
-
-  it('returns "github" when no authAccounts record found', async () => {
-    const ctx = makeProviderCtx(null)
-    expect(await resolveProviderFromAccount(ctx as never, 'users:1' as never)).toBe('github')
-  })
-
-  it('returns the provider for oidc', async () => {
-    const ctx = makeProviderCtx('oidc')
-    expect(await resolveProviderFromAccount(ctx as never, 'users:1' as never)).toBe('oidc')
   })
 })

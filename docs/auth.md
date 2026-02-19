@@ -1,5 +1,5 @@
 ---
-summary: 'Auth overview: GitHub OAuth (web) + API tokens (CLI).'
+summary: 'Auth overview: GitHub/GitLab/OIDC OAuth (web) + API tokens (CLI).'
 read_when:
   - Working on login/token flows
   - Debugging 401s
