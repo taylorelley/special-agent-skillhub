@@ -31,6 +31,10 @@ function CliAuth() {
   const safeRedirect = useMemo(() => isAllowedRedirectUri(redirectUri), [redirectUri])
   const registry = import.meta.env.VITE_CONVEX_SITE_URL as string | undefined
 
+  const showGitHub = import.meta.env.VITE_AUTH_SHOW_GITHUB !== 'false'
+  const gitlabName = import.meta.env.VITE_AUTH_GITLAB_NAME as string | undefined
+  const oidcName = import.meta.env.VITE_AUTH_OIDC_NAME as string | undefined
+
   useEffect(() => {
     if (hasRun.current) return
     if (!safeRedirect) return
@@ -98,18 +102,19 @@ function CliAuth() {
     )
   }
 
-  const showGitHub = import.meta.env.VITE_AUTH_SHOW_GITHUB !== 'false'
-  const gitlabName = import.meta.env.VITE_AUTH_GITLAB_NAME as string | undefined
-  const oidcName = import.meta.env.VITE_AUTH_OIDC_NAME as string | undefined
-
   if (!isAuthenticated || !me) {
+    const noProviders = !showGitHub && !gitlabName && !oidcName
     return (
       <main className="section">
         <div className="card">
           <h1 className="section-title" style={{ marginTop: 0 }}>
             CLI login
           </h1>
-          <p className="section-subtitle">Sign in to create an API token for the CLI.</p>
+          {noProviders ? (
+            <p className="section-subtitle">No sign-in providers configured — contact an admin.</p>
+          ) : (
+            <p className="section-subtitle">Sign in to create an API token for the CLI.</p>
+          )}
           {showGitHub && (
             <button
               className="btn btn-primary"

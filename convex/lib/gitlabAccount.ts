@@ -41,8 +41,8 @@ export async function requireGitLabAccountAge(ctx: ActionCtx, userId: Id<'users'
     })
   }
 
-  if (!createdAt) throw new ConvexError('GitLab account lookup failed')
-
+  // createdAt is always non-null here: stale=false means it was non-null to
+  // begin with; stale=true means the block above either set it or threw.
   const ageMs = now - createdAt
   if (ageMs < MIN_ACCOUNT_AGE_MS) {
     const remainingMs = MIN_ACCOUNT_AGE_MS - ageMs

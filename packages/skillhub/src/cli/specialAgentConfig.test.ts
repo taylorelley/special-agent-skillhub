@@ -1,4 +1,4 @@
-/* @vitest-environment node */
+/* @vitest-environment node -- Node is required: tests use fs (mkdtemp, writeFile) and resolve real paths */
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'

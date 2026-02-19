@@ -64,8 +64,6 @@ export async function resolveProviderFromAccount(
   return account?.provider ?? 'github'
 }
 
-// Build providers array conditionally — each provider only active when its credentials are set
-
 const providers: Parameters<typeof convexAuth>[0]['providers'] = []
 
 const githubId = process.env.AUTH_GITHUB_ID
@@ -142,7 +140,9 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
      */
     async afterUserCreatedOrUpdated(ctx, args) {
       handleSignupRestriction(args.existingUserId)
-      const provider = await resolveProviderFromAccount(ctx, args.userId)
+      // args.provider.id is available directly from the callback; avoids a
+      // redundant authAccounts query and is reliable on first-time sign-ups.
+      const provider = (args.provider as { id: string }).id
       await ctx.db.patch(args.userId, { provider })
       await handleSoftDeletedUserReauth(ctx, args)
     },

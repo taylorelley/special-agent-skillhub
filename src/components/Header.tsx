@@ -35,7 +35,12 @@ export default function Header() {
   const showGitHub = import.meta.env.VITE_AUTH_SHOW_GITHUB !== 'false'
   const gitlabName = import.meta.env.VITE_AUTH_GITLAB_NAME as string | undefined
   const oidcName = import.meta.env.VITE_AUTH_OIDC_NAME as string | undefined
-  const hasAlternatives = Boolean(gitlabName) || Boolean(oidcName) || !showGitHub
+  // true when the multi-option layout is needed; false falls through to the
+  // legacy single-button GitHub path.  When GitHub is disabled and no
+  // alternatives are configured the options div renders empty, so guard with
+  // showGitHub so the else branch (simple GitHub button) only shows when it
+  // would actually work.
+  const hasAlternatives = Boolean(gitlabName) || Boolean(oidcName) || showGitHub
 
   const setTheme = (next: 'system' | 'light' | 'dark') => {
     startThemeTransition({

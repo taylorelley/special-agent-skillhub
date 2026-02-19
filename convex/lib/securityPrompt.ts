@@ -255,11 +255,12 @@ export function assembleEvalUserMessage(ctx: SkillEvalContext): string {
   const fm = ctx.parsed.frontmatter ?? {}
   const rawSpecialAgent = (ctx.parsed.specialAgent ?? {}) as Record<string, unknown>
   const meta = (ctx.parsed.metadata ?? {}) as Record<string, unknown>
+  const rawMetaSpecialAgent = (meta['special-agent'] ?? meta.specialAgent) as unknown
   const specialAgentFallback =
-    meta.special - agent &&
-    typeof meta.special - agent === 'object' &&
-    !Array.isArray(meta.special - agent)
-      ? ((meta.special - agent) as Record<string, unknown>)
+    rawMetaSpecialAgent &&
+    typeof rawMetaSpecialAgent === 'object' &&
+    !Array.isArray(rawMetaSpecialAgent)
+      ? (rawMetaSpecialAgent as Record<string, unknown>)
       : {}
   const specialAgent =
     Object.keys(rawSpecialAgent).length > 0 ? rawSpecialAgent : specialAgentFallback

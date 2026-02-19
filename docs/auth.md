@@ -57,7 +57,7 @@ The CLI uses a long-lived API token (Bearer token) for publish/sync/delete.
 
 1. Starts a loopback HTTP server on `127.0.0.1` (random port).
 2. Opens `<site>/cli/auth?redirect_uri=http://127.0.0.1:<port>/callback&state=...`.
-3. Web UI requires GitHub login, then creates a token and redirects back to the loopback server.
+3. Web UI requires login via one of the configured OAuth providers, then creates a token and redirects back to the loopback server.
 4. CLI stores the token in the global config file.
 
 ### Headless flow
